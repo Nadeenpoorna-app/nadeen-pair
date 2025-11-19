@@ -103,7 +103,7 @@ router.get('/', async (req, res) => {
                                 fs.createReadStream(auth_path + 'creds.json'),
                                 `${randomMegaId()}.json`
                             );
-                            const sessionId = mega_url.replace('https://mega.nz/file/', '');
+                            const sessionId = mega_url.replace('https://mega.nz/file/', '𝙽𝙰𝙳𝙴𝙴𝙽-𝙼𝙳=');
                             console.log("✅ Session uploaded:", sessionId);
 
                             // ✅ Send only session ID first
