@@ -8,18 +8,23 @@ const { upload } = require('./mega');
 let router = express.Router();
 
 const MESSAGE = `
-*SESSION GENERATED SUCCESSFULLY* ✅
+🚀 *𝗦𝗘𝗦𝗦𝗜𝗢𝗡 𝗚𝗘𝗡𝗘𝗥𝗔𝗧𝗘𝗗 𝗦𝗨𝗖𝗖𝗘𝗦𝗦𝗙𝗨𝗟𝗬* ✅
 
-*Join channel* 📢              
-Follow the Septorch ™ channel on WhatsApp: https://whatsapp.com/channel/0029Vb1ydGk8qIzkvps0nZ04
+> 🚫ᴅᴏɴ'ᴛ ꜱʜᴀʀᴇ ᴛʜɪꜱ ᴄᴏᴅᴇ ᴡɪᴛʜ ᴀɴʏᴏɴᴇ!!!
 
-*Sᴜᴘᴘᴏʀᴛ Gʀᴏᴜᴘ ꜰᴏʀ ϙᴜᴇʀʏ* 💭              
-https://chat.whatsapp.com/GGBjhgrxiAS1Xf5shqiGXH?mode=wwt
+✨ *Gɪᴠᴇ ᴀ Sᴛᴀʀ ᴛᴏ Rᴇᴘᴏ Fᴏʀ Cᴏᴜʀᴀɢᴇ* 🌟
+https://github.com/Nadeenpoorna-app/NADEEN-MD
 
-*Yᴏᴜᴛᴜʙᴇ ᴛᴜᴛᴏʀɪᴀʟꜱ* 🪄               
-https://youtube.com/@septorch
+🪀 *Fᴏʟʟᴏᴡ Wʜᴀᴛꜱᴀᴘᴘ Cʜᴀɴɴᴇʟ* 🪀
+https://whatsapp.com/channel/0029VagN2qW3gvWUBhsjcn3I
 
-*SEPTORCH--WHATSAPP-BOT* 🤖
+👨🏻‍💻 *Cᴏɴᴛᴀᴄᴛ Oᴡɴᴇʀ* 👨🏻‍💻
+https://wa.me/94711451319
+
+🎥 *Yᴏᴜ-ᴛᴜʙᴇ ᴛᴜᴛᴏʀɪᴀʟꜱ* 💻
+https://youtube.com/@NADEEN-MD
+
+🎯 *Nα∂єєη м∂ ву Nα∂єєη Pσσяηα* 🎯
 `;
 
 // ✅ Use dynamic import for Baileys (ESM support)
