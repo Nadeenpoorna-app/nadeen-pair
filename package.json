@@ -8,9 +8,9 @@
         "node": ">=20.0.0"
   },
   "scripts": {
-    "start": "pm2 start index.js --deep-monitoring --attach --name nadeen",
-    "stop": "pm2 stop nadeen",
-    "restart": "pm2 restart nadeen",
+    "start": "pm2 start index.js --deep-monitoring --attach --name qasim",
+    "stop": "pm2 stop qasim",
+    "restart": "pm2 restart qasim",
     "dev": "nodemon index.js"
   },
   "keywords": [
