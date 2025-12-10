@@ -154,13 +154,13 @@ router.get('/', async (req, res) => {
                         console.log("Connection TimedOut!");
                     } else {
                         console.log('Unexpected disconnect. Restarting...');
-                        exec('pm2 restart nadeen);
+                        exec('pm2 restart qasim);
                     }
                 }
             });
         } catch (err) {
             console.error("Error in SUHAIL function:", err);
-            exec('pm2 restart nadeen');
+            exec('pm2 restart qasim');
             if (fs.existsSync(SESSION_DIR)) {
                 fs.emptyDirSync(SESSION_DIR);
             }
