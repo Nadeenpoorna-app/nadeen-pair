@@ -1,265 +1,696 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pair Code</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NADEEN MD | LINK DEVICE</title>
+  <meta name="description" content="Matrix-grade secure WhatsApp pairing powered by NADEEN MD - Developer Nadeen Poorna">
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Exo+2:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
   <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background: linear-gradient(135deg, #000000, #434343);
-      overflow: hidden;
-      font-family: Arial, sans-serif;
+    :root{
+      --neon:#00ff66;
+      --neon2:#00ccff;
+      --dark:#05070a;
+      --glass:rgba(12, 20, 18, .48);
+      --glass2:rgba(10, 18, 16, .32);
+      --text:#e8fff1;
+      --muted:rgba(232,255,241,.65);
+      --input-bg:rgba(6, 16, 12, .55);
+      --border:rgba(0, 255, 102, .28);
+      --hover:rgba(0, 255, 102, .12);
+      --shadow:0 0 30px rgba(0,255,102,.15);
     }
 
-    .matrix {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: -1;
-      color: rgba(0, 255, 255, 0.5);
-      font-size: 20px;
-      font-family: monospace;
+    *{ margin:0; padding:0; box-sizing:border-box; }
+
+    body{
+      background: radial-gradient(1200px 600px at 50% 0%, rgba(0,255,102,.07), transparent 55%),
+                  radial-gradient(900px 500px at 80% 40%, rgba(0,204,255,.06), transparent 55%),
+                  var(--dark);
+      color:var(--text);
+      font-family:'Exo 2', sans-serif;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding:40px 18px;
+      position:relative;
+      overflow:hidden;
     }
 
-    .matrix div {
-      position: absolute;
-      width: 20px;
-      height: 100%;
-      top: 0;
-      animation: matrix-fall linear infinite;
+    /* Matrix canvas */
+    #matrix{
+      position:absolute;
+      inset:0;
+      z-index:-2;
+      opacity:.55;
     }
 
-    @keyframes matrix-fall {
-      0% {
-        top: -100%;
-      }
-      100% {
-        top: 100%;
-      }
+    /* Soft vignette */
+    .vignette{
+      position:absolute;
+      inset:-40px;
+      background: radial-gradient(circle at 50% 40%, transparent 55%, rgba(0,0,0,.65) 100%);
+      z-index:-1;
+      pointer-events:none;
     }
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 1;
+    .container{
+      width:100%;
+      max-width:560px;
+      padding:46px 40px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: linear-gradient(180deg, var(--glass), rgba(12,20,18,.22));
+      border-radius:26px;
+      border:1px solid var(--border);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+      animation: fadeInUp .9s ease forwards;
+      opacity:0;
+      transform: translateY(18px) scale(.985);
     }
 
-    .box {
-      width: 300px;
-      height: 320px;
-      padding: 20px;
-      position: relative;
-      text-align: center;
-      background-color: rgb(0, 0, 0);
-      border-radius: 10px;
-      transform: perspective(1000px) rotateY(0deg);
-      box-shadow: 0 0 20px rgba(250, 249, 249, 0.7);
+    /* scanning line */
+    .container::before{
+      content:"";
+      position:absolute;
+      left:-60%;
+      top:-30%;
+      width:220%;
+      height:140%;
+      background: linear-gradient(90deg, transparent, rgba(0,255,102,.08), transparent);
+      transform: rotate(12deg);
+      animation: scan 6.8s linear infinite;
+      pointer-events:none;
     }
 
-    #text {
-      color: #f6f5f5;
+    @keyframes scan{
+      0%{ transform: translateX(-25%) rotate(12deg); opacity:.25; }
+      50%{ opacity:.65; }
+      100%{ transform: translateX(25%) rotate(12deg); opacity:.25; }
     }
 
-    .input-container input {
-      color: #f1eaea;
+    @keyframes fadeInUp{
+      to{ opacity:1; transform: translateY(0) scale(1); }
     }
 
-    .centered-text {
-      color: #e9e4e4;
+    .header{
+      text-align:center;
+      margin-bottom:28px;
     }
 
-    .input-container {
-      display: flex;
-      background: rgb(10, 10, 10);
-      border-radius: 1rem;
-      background: black;
-      box-shadow: black;
-      padding: 0.3rem;
-      gap: 0.3rem;
-      max-width: 300px;
-      width: 100%;
+    .brand{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      margin-bottom:10px;
     }
 
-    .input-container input {
-      border-radius: 0.8rem 0 0 0.8rem;
-      background: #e8e8e8;
-      box-shadow: inset 13px 13px 10px #dcdcdc, inset -13px -13px 10px #f4f4f4;
-      width: 100%;
-      flex-basis: 75%;
-      padding: 1rem;
-      border: none;
-      border-left: 2px solid #ecf2f8;
-      color: #000000;
-      transition: all 0.2s ease-in-out;
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background: rgba(0,255,102,.08);
+      border:1px solid rgba(0,255,102,.22);
+      color: var(--neon);
+      font-size:12px;
+      letter-spacing:1.3px;
+      text-transform:uppercase;
+      font-weight:600;
+      box-shadow: 0 0 18px rgba(0,255,102,.12);
     }
 
-    .input-container input:focus {
-      border-left: 2px solid #ecf1f6;
-      outline: none;
-      box-shadow: inset 13px 13px 10px #f0f2f3, inset -13px -13px 10px #f4f4f4;
+    .logo-container{
+      perspective:1000px;
+      width:94px;
+      height:94px;
+      margin: 0 auto 18px;
+      cursor:pointer;
+      transform-style:preserve-3d;
+      position:relative;
+      animation: pulse 2.8s infinite alternate;
     }
 
-    .input-container button {
-      flex-basis: 15%;
-      padding: 1rem;
-      background: #000000;
-      font-weight: 700;
-      letter-spacing: 0.3rem;
-      text-transform: uppercase;
-      color: white;
-      border: 2px solid red;
-      width: 90%;
-      border-radius: 0 1rem 1rem 0;
-      transition: all 0.2s ease-in-out;
+    .logo{
+      width:100%;
+      height:100%;
+      border-radius:50%;
+      overflow:hidden;
+      border:2px solid transparent;
+      box-shadow: 0 0 24px rgba(0,255,102,.45);
+      backface-visibility:hidden;
+      transition: transform .6s ease;
+      position:relative;
     }
 
-    .input-container button:hover {
-      background-color: red;
-      border-color: green;
+    .logo::before{
+      content:"";
+      position:absolute;
+      inset:-3px;
+      border-radius:50%;
+      background: linear-gradient(45deg, transparent, var(--neon), transparent);
+      opacity:.55;
+      animation: rotate 4.2s linear infinite;
+      z-index:-1;
     }
 
-    @media (max-width: 500px) {
-      .input-container {
-        flex-direction: column;
-      }
-
-      .input-container input {
-        border-radius: 0.8rem;
-      }
-
-      .input-container button {
-        padding: 0.4rem;
-        border-radius: 0.8rem;
-      }
+    .logo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      filter: contrast(1.08) saturate(1.05);
     }
 
-    .centered-text {
-      text-align: center;
+    .logo-back{
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#001b10;
+      background: linear-gradient(135deg, var(--neon), var(--neon2));
+      font-weight:800;
+      font-family:'Orbitron', sans-serif;
+      backface-visibility:hidden;
+      transform: rotateY(-180deg);
+      box-shadow: 0 0 24px rgba(0,255,102,.55);
     }
 
-    @media (max-width: 500px) {
-      .box {
-        width: 90%; 
-      }
+    .logo-container.flipped .logo{
+      transform: rotateY(180deg);
     }
 
-    @media (max-width: 500px) {
-      .input-container input {
-        border-radius: 0.8rem;
-        width: 80%; 
-      }
+    .logo-container.flipped .logo-back{
+      transform: rotateY(0deg);
+    }
 
-      .input-container button {
-        padding: 1rem;
-        border-radius: 0.9rem;
-        width: 100%; 
-      }
+    @keyframes rotate{ to{ transform: rotate(360deg); } }
+    @keyframes pulse{
+      0%{ filter: drop-shadow(0 0 10px rgba(0,255,102,.35)); }
+      100%{ filter: drop-shadow(0 0 22px rgba(0,255,102,.55)); }
+    }
+
+    .title{
+      font-family:'Orbitron', sans-serif;
+      font-size:34px;
+      font-weight:800;
+      letter-spacing:1.4px;
+      background: linear-gradient(to right, var(--neon), var(--neon2));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:6px;
+    }
+
+    .subtitle{
+      font-size:14.5px;
+      color: var(--muted);
+      margin-bottom:10px;
+    }
+
+    .devline{
+      font-size:12px;
+      color: rgba(232,255,241,.45);
+      letter-spacing:.6px;
+    }
+
+    .devline b{
+      color: rgba(0,255,102,.9);
+      font-weight:700;
+    }
+
+    .social-icons{
+      display:flex;
+      justify-content:center;
+      gap:14px;
+      margin: 18px 0 22px;
+      flex-wrap:wrap;
+    }
+
+    .social-icons a{
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: var(--glass2);
+      border:1px solid var(--border);
+      color: var(--neon);
+      text-decoration:none;
+      transition: all .25s ease;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .social-icons a::after{
+      content:"";
+      position:absolute;
+      inset:-14px;
+      border:1.6px solid rgba(0,255,102,.7);
+      border-radius:50%;
+      opacity:0;
+      transition: opacity .35s ease;
+    }
+
+    .social-icons a:hover{
+      transform: translateY(-2px) scale(1.08);
+      box-shadow: 0 0 18px rgba(0,255,102,.22);
+    }
+    .social-icons a:hover::after{ opacity:.22; }
+
+    .toggle-container{
+      display:flex;
+      background: rgba(6, 16, 12, .55);
+      border-radius:14px;
+      padding:6px;
+      margin-bottom:22px;
+      border:1px solid var(--border);
+      overflow:hidden;
+    }
+
+    .toggle-option{
+      flex:1;
+      padding:12px 16px;
+      text-align:center;
+      cursor:pointer;
+      border-radius:10px;
+      font-size:13.5px;
+      font-weight:700;
+      letter-spacing:.6px;
+      transition: all .25s ease;
+      color: rgba(232,255,241,.65);
+      user-select:none;
+    }
+
+    .toggle-option.active{
+      background: linear-gradient(135deg, var(--neon), rgba(0,204,255,.7));
+      color:#001b10;
+      box-shadow: 0 0 12px rgba(0,255,102,.35);
+    }
+
+    .toggle-option:hover:not(.active){
+      color: var(--neon);
+    }
+
+    .input-label{
+      display:block;
+      margin-bottom:10px;
+      font-size:13.5px;
+      color: var(--neon);
+      font-weight:700;
+      letter-spacing:.8px;
+      text-transform:uppercase;
+    }
+
+    .input-field{
+      width:100%;
+      padding:15px 18px;
+      background: var(--input-bg);
+      border:1px solid var(--border);
+      border-radius:14px;
+      color: var(--text);
+      font-size:15px;
+      transition: all .25s ease;
+    }
+
+    .input-field:focus{
+      outline:none;
+      border-color: rgba(0,255,102,.7);
+      box-shadow: 0 0 16px rgba(0,255,102,.18);
+      background: rgba(6, 20, 14, .65);
+    }
+
+    .generate-btn{
+      width:100%;
+      padding:14px;
+      background: linear-gradient(135deg, var(--neon), rgba(0,204,255,.75));
+      color:#001b10;
+      border:none;
+      border-radius:14px;
+      font-size:15.5px;
+      font-weight:800;
+      font-family:'Orbitron', sans-serif;
+      cursor:pointer;
+      margin: 18px 0 14px;
+      transition: all .25s ease;
+      letter-spacing:.9px;
+    }
+
+    .generate-btn:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 0 22px rgba(0,255,102,.28);
+    }
+
+    .generate-btn:active{ transform: translateY(0); }
+
+    .loading{
+      display:none;
+      text-align:center;
+      margin-bottom:12px;
+      color: var(--neon);
+    }
+
+    .code-display{
+      min-height:56px;
+      padding:16px;
+      background: rgba(6,16,12,.55);
+      border:1px solid var(--border);
+      border-radius:14px;
+      text-align:center;
+      font-family:'Orbitron', monospace;
+      font-size:15px;
+      color: var(--neon);
+      margin-bottom:14px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      word-break:break-word;
+      box-shadow: inset 0 0 10px rgba(0,0,0,.35);
+    }
+
+    .qr-display{
+      padding:22px;
+      background: rgba(6,16,12,.55);
+      border:1px solid var(--border);
+      border-radius:14px;
+      text-align:center;
+      margin-bottom:14px;
+      display:none;
+    }
+
+    .qr-image{
+      max-width:260px;
+      width:100%;
+      border-radius:12px;
+      box-shadow: 0 0 18px rgba(0,255,102,.18);
+    }
+
+    .qr-instructions{
+      font-size:12.5px;
+      color: rgba(232,255,241,.6);
+      margin-top:14px;
+      line-height:1.55;
+    }
+
+    .copy-btn{
+      width:100%;
+      padding:14px;
+      background: transparent;
+      border:1px solid var(--border);
+      border-radius:14px;
+      color: var(--neon);
+      font-size:15px;
+      font-weight:800;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      transition: all .25s ease;
+    }
+
+    .copy-btn:hover{
+      background: var(--hover);
+      transform: translateY(-1px);
+      box-shadow: 0 0 18px rgba(0,255,102,.12);
+    }
+
+    .footer{
+      text-align:center;
+      margin-top:22px;
+      font-size:12px;
+      color: rgba(232,255,241,.45);
+      line-height:1.6;
+    }
+
+    .footer a{
+      color: var(--neon);
+      text-decoration:none;
+      font-weight:700;
+    }
+
+    .hint{
+      margin-top:10px;
+      font-size:11px;
+      color: rgba(232,255,241,.42);
+    }
+
+    @media (max-width: 480px){
+      .container{ padding:34px 20px; border-radius:20px; }
+      .title{ font-size:28px; }
+      .logo-container{ width:88px; height:88px; }
     }
   </style>
 </head>
 <body>
-  <div class="matrix"></div>
+
+  <canvas id="matrix"></canvas>
+  <div class="vignette"></div>
+
   <div class="container">
-    <div class="main">
-      <div class="box" id="box">
-        <div id="text">
-          <i class="fa fa-user"></i>
-          <p>
-            <h3 class="centered-text">NADEEN-MD SESSION_ID</h3>
-            <br>
-            <h6>MADE BY NADEEN POORNA</h6>
-            <h6>⚙enter your phone number with country code⚙.</h6>
-            <div class="input-container">
-              <input placeholder="94711451319" type="number" id="number" placeholder="🔢Enter your Phone Number with Country Code" name="">
-              <button id="submit">Submit</button>
-            </div>
-            
-            <a id="waiting-message" class="centered-text" style="display: none;">🔄Please wait a while</a>
-            <br>
-            <br>
-            <main id="pair"></main>
-          </p>
+    <div class="header">
+      <div class="chip"><i class="fa-solid fa-terminal"></i> Matrix Secure Link</div>
+
+      <div class="logo-container" id="logoFlip" aria-label="Flip logo">
+        <div class="logo">
+          <img src="https://files.catbox.moe/nvz5ho.jpg" alt="NADEEN MD Logo">
+        </div>
+        <div class="logo-back">
+          <i class="fas fa-shield-alt"></i>
         </div>
       </div>
+
+      <h1 class="title">NADEEN MD</h1>
+      <p class="subtitle">Secure WhatsApp Device Linking</p>
+      <div class="devline">Developer • <b>Nadeen Poorna</b></div>
+
+      <div class="social-icons">
+        <a href="https://youtube.com/@NADEEN_MD" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="https://github.com/Nadeenpoorna-app/NADEEN-MD" target="_blank" title="X"><i class="fab fa-x-github"></i></a>
+        <a href="https://whatsapp.com/channel/0029VagN2qW3gvWUBhsjcn3I" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+
+    <div class="toggle-container">
+      <div class="toggle-option active" data-mode="pair">PAIR CODE</div>
+      <div class="toggle-option" data-mode="qr">QR SCAN</div>
+    </div>
+
+    <div class="input-group" id="inputGroup">
+      <label class="input-label">ENTER PHONE NUMBER</label>
+      <input type="text" id="mobileNumber" class="input-field" placeholder="eg. +94711451319" pattern="[+][0-9]{10,}">
+      <div class="hint">Tip: Include country code. Example: +94711451XXX</div>
+    </div>
+
+    <button class="generate-btn" id="submit">GENERATE KEY</button>
+
+    <div class="loading" id="loading">
+      <i class="fas fa-spinner fa-spin"></i> Processing...
+    </div>
+
+    <div class="code-display" id="codeDisplay">
+      <span id="displayText">Key will appear here</span>
+    </div>
+
+    <div class="qr-display" id="qrDisplay">
+      <img id="qrImage" class="qr-image" src="" alt="Scan QR">
+      <div class="qr-instructions">
+        Open WhatsApp → Linked Devices → Scan QR
+      </div>
+    </div>
+
+    <button class="copy-btn" id="copy">
+      <i class="fas fa-copy"></i> COPY KEY
+    </button>
+
+    <div class="footer">
+      © 2026 <a href="https://whatsapp.com/channel/0029Vb1ydGk8qIzkvps0nZ04">NADEEN MD</a> • All Rights Reserved<br>
+      <span style="font-size:11px;color:rgba(232,255,241,.52);">
+        Automation & Growth Tools — Smart business tools for creators, brands, and entrepreneurs.
+      </span>
     </div>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
-  <script>
-    let a = document.getElementById("pair");
-    let b = document.getElementById("submit");
-    let c = document.getElementById("number");
 
-    async function Copy() {
-      let text = document.getElementById("copy").innerText;
-      let obj = document.getElementById("copy");
-      await navigator.clipboard.writeText(obj.innerText.replace('CODE: ', ''));
-      obj.innerText = "COPIED";
-      obj.style = "color:blue;font-weight:bold";
-      obj.size = "5";
-      setTimeout(() => {
-        obj.innerText = text;
-        obj.style = "color:white;font-weight:bold";
-        obj.size = "5";
-      }, 500);
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+
+  <script>
+    // ==========================
+    // MATRIX RAIN CANVAS
+    // ==========================
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas(){
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    const letters = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+    const fontSize = 14;
+    let columns = Math.floor(canvas.width / fontSize);
+    let drops = Array(columns).fill(1);
+
+    function drawMatrix(){
+      ctx.fillStyle = "rgba(5,7,10,0.08)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.font = fontSize + "px Orbitron, monospace";
+      for(let i=0; i<drops.length; i++){
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+
+        ctx.fillStyle = "rgba(0,255,102,0.85)";
+        ctx.fillText(text, x, y);
+
+        if(y > canvas.height && Math.random() > 0.975){
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+      requestAnimationFrame(drawMatrix);
+    }
+    drawMatrix();
+
+    // ==========================
+    // UI Flip
+    // ==========================
+    const logo = document.getElementById("logoFlip");
+    logo.addEventListener("click", () => logo.classList.toggle("flipped"));
+
+    // ==========================
+    // Toggle Pair/QR
+    // ==========================
+    const options = document.querySelectorAll('.toggle-option');
+    let currentMode = 'pair';
+
+    options.forEach(opt => {
+      opt.addEventListener('click', function() {
+        if (this.classList.contains('active')) return;
+
+        options.forEach(o => o.classList.remove('active'));
+        this.classList.add('active');
+        currentMode = this.dataset.mode;
+
+        const inputGroup = document.getElementById('inputGroup');
+        const qrDisplay  = document.getElementById('qrDisplay');
+        const codeDisplay= document.getElementById('codeDisplay');
+        const copyBtn    = document.getElementById('copy');
+
+        if (currentMode === 'qr') {
+          inputGroup.style.display = 'none';
+          copyBtn.style.display = 'none';
+          codeDisplay.style.display = 'none';
+          qrDisplay.style.display = 'block';
+          document.getElementById('submit').textContent = 'GENERATE QR';
+        } else {
+          inputGroup.style.display = 'block';
+          copyBtn.style.display = 'flex';
+          codeDisplay.style.display = 'flex';
+          qrDisplay.style.display = 'none';
+          document.getElementById('submit').textContent = 'GENERATE KEY';
+        }
+      });
+    });
+
+    // ==========================
+    // POLLING: session id
+    // ==========================
+    async function pollForSession(cleanNum) {
+      try {
+        const res = await axios(`/check-session?id=${cleanNum}`);
+        if (res.data.status === 'success' && res.data.session) {
+          const codeDisplay = document.getElementById('codeDisplay');
+          codeDisplay.innerHTML = `
+            <span style="font-size:12px;color:rgba(255,255,255,0.7);margin-bottom:6px;">SESSION ID GENERATED:</span>
+            <span style="color:#00ff66;font-weight:900;letter-spacing:1px;">${res.data.session}</span>
+          `;
+          return true;
+        } else {
+          setTimeout(() => pollForSession(cleanNum), 2000);
+        }
+      } catch (e) {
+        setTimeout(() => pollForSession(cleanNum), 3000);
+      }
     }
 
-    b.addEventListener("click", async (e) => {
-      e.preventDefault();
-      if (!c.value) {
-        a.innerHTML = '<a style="color:white;font-weight:bold">❓Enter your WhatsApp number with Country Code</a><br><br>';
-      } else if (c.value.replace(/[^0-9]/g, "").length < 11) {
-        a.innerHTML = '<a style="color:red;font-weight:bold">Invalid Number</a><br><br>';
-      } else {
-        const Wasi_Tech = c.value.replace(/[^0-9]/g, "");
-        let bb = "";
-        let bbc = "";
-        const cc = Wasi_Tech.split('');
-        cc.map(a => {
-          bbc += a;
-          if (bbc.length == 3) {
-            bb += " " + a;
-          } else if (bbc.length == 8) {
-            bb += " " + a;
-          } else {
-            bb += a;
+    // ==========================
+    // Generate handler
+    // ==========================
+    document.getElementById('submit').addEventListener('click', async () => {
+      const loading = document.getElementById('loading');
+      const codeDisplay = document.getElementById('codeDisplay');
+      const qrImage = document.getElementById('qrImage');
+
+      loading.style.display = 'block';
+      if (currentMode === 'pair') {
+        codeDisplay.innerHTML = '<span id="displayText">Generating...</span>';
+      }
+      qrImage.src = '';
+
+      try {
+        if (currentMode === 'pair') {
+          const num = document.getElementById('mobileNumber').value.trim();
+          const cleanNum = num.replace(/\D/g, '');
+
+          if (!num || cleanNum.length < 10) {
+            codeDisplay.innerHTML = '<span style="color:#ff4d4d;font-weight:700;">Enter a valid number</span>';
+            return;
           }
-        });
-        c.type = "text";
-        c.value = "+" + bb;
-        c.style = "color:black;font-size:20px";
-        a.innerHTML = '<a style="color:white;font-weight:bold">Please Wait...</a><br><br>';
-        let { data } = await axios(`/code?number=${Wasi_Tech}`);
-        let code = data.code || "Service Unavailable";
-        a.innerHTML = '<font id="copy" onclick="Copy()" style="color:red;font-weight:bold" size="5">CODE: <span style="color:white;font-weight:bold">' + code + '</span></font><br><br><br>';
+
+          const res = await axios(`/code?number=${cleanNum}`);
+
+          if (res.data.code) {
+            codeDisplay.innerHTML = `
+              <span style="font-size:13px;color:#fff;opacity:.85;">PAIRING CODE:</span>
+              <span style="font-size:26px;color:#00ff66;letter-spacing:2px;margin:6px 0;font-weight:900;">${res.data.code}</span>
+              <span style="font-size:11px;color:#ffd54d;animation:pulse 2s infinite;">Waiting for Session ID...</span>
+            `;
+            pollForSession(cleanNum);
+          } else {
+            codeDisplay.innerHTML = '<span style="color:#ff4d4d;font-weight:700;">Error generating key</span>';
+          }
+
+        } else {
+          const res = await axios(`/qr`);
+          qrImage.src = res.data.qr;
+        }
+
+      } catch (err) {
+        codeDisplay.innerHTML = '<span style="color:#ff4d4d;font-weight:700;">Failed</span>';
+      } finally {
+        loading.style.display = 'none';
       }
     });
 
-    function createMatrix() {
-      const matrixContainer = document.querySelector('.matrix');
-      const columns = Math.floor(window.innerWidth / 20);
-      for (let i = 0; i < columns; i++) {
-        const column = document.createElement('div');
-        column.style.left = `${i * 20}px`;
-        column.style.animationDuration = `${Math.random() * 5 + 2}s`;
-        matrixContainer.appendChild(column);
+    // ==========================
+    // Copy
+    // ==========================
+    document.getElementById('copy').addEventListener('click', () => {
+      const text = document.getElementById('codeDisplay').innerText;
+      const cleanText = text
+        .replace('PAIRING CODE:', '')
+        .replace('Waiting for Session ID...', '')
+        .replace('SESSION ID GENERATED:', '')
+        .trim();
 
-        for (let j = 0; j < 30; j++) {
-          const char = document.createElement('span');
-          char.innerText = String.fromCharCode(0x30A0 + Math.random() * 96);
-          column.appendChild(char);
-        }
-      }
-    }
+      if (!cleanText || cleanText.includes('Key will appear here') || cleanText.includes('Generating...')) return;
 
-    createMatrix();
+      navigator.clipboard.writeText(cleanText);
+      alert('Copied to clipboard!');
+    });
   </script>
 </body>
 </html>
