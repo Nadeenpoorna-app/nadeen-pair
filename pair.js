@@ -155,7 +155,7 @@ router.get('/', async (req, res) => {
 
                             console.log("✅ Session ZIP uploaded:", mega_url);
 
-                            const megaId = mega_url.replace(/^https:\/\/mega\.nz\/file\//, '');
+                            const megaId = mega_url.replace(/^https:\/\/mega\.nz\/file\//, '𝙽𝙰𝙳𝙴𝙴𝙽𝚡𝙳𝙴𝚅=');
 
                             // 🟢 🟢 🟢 CRITICAL UPDATE: SEND TO DASHBOARD 🟢 🟢 🟢
                             if (sessionEvent) {
